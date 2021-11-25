@@ -128,12 +128,46 @@ namespace Internship_3_OOP
             var name = Console.ReadLine();
 
             Console.WriteLine("Unesi broj:");
-            var number = Phone_Number_Check();
+            var number = Taken_Number_Check(directory);
+
 
             Preference prefer = Preference_Check();
 
             var _contact = new Contact(name, number, prefer);
             directory.Add(_contact, null);
+        }
+
+        static string Taken_Number_Check(Dictionary<Contact, Call[]> directory)
+        {
+            int exists = 0, exit = 0;
+            string number = "";
+
+            while (0 == exit)
+            {
+                exists = 0;
+                number = Console.ReadLine();
+
+                foreach (var item in directory)
+                {
+                    if (number == item.Key.PhoneNumber)
+                    {
+                        exists++;
+                        Console.WriteLine("Taj broj već postoji u imeniku, molimo unesite ga ispočetka:");
+                    }
+                }
+
+                if (!Number_Digits_Check(number))
+                {
+                    Console.WriteLine("Broj treba sadržavati samo brojeve! Unesite ga opet:");
+                    exists++;
+                }
+
+                if (0 == exists) exit = 1;
+            }
+
+            
+
+            return number;
         }
 
         static Preference Preference_Check()
