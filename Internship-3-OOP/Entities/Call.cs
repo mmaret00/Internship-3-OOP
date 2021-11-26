@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using Internship_3_OOP.Entities;
+
 
 namespace Internship_3_OOP.Entities
 {
     public enum CallStatus
     {
-        in_process,
         missed,
-        complete
+        complete,
+        in_process
     }
 
     public class Call
@@ -29,19 +31,6 @@ namespace Internship_3_OOP.Entities
         {
             CallSetupTime = dt;
             _callStatus = cs;
-        }
-
-        static public List<(DateTime, CallStatus)> CreateSortedListOfCalls(Call[] call)
-        {
-            var sortedCalls = new List<(DateTime, CallStatus)>();
-
-            for (int i = 0; i < call.Length; i++)
-            {
-                sortedCalls.Add((call[i].CallSetupTime, call[i]._callStatus));
-            }
-            sortedCalls.Sort((a, b) => b.Item1.CompareTo(a.Item1));
-
-            return sortedCalls;
         }
     }
 }
