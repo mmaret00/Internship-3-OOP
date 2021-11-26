@@ -6,4 +6,9 @@
     <RootNamespace>Internship_3_OOP</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+
 </Project>
