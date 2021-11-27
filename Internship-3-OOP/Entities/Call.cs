@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using System.Threading;
 using Internship_3_OOP.Entities;
 
-
 namespace Internship_3_OOP.Entities
 {
     public enum CallStatus
     {
-        missed,
-        complete,
-        in_process
+        Missed,
+        Complete,
+        In_process
     }
 
     public class Call

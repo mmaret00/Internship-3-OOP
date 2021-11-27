@@ -9,9 +9,9 @@ namespace Internship_3_OOP
 {
     public enum Preference
     {
-        favorite,
-        normal,
-        blocked
+        Favorite,
+        Normal,
+        Blocked
     }
 
     public class Contact
@@ -24,7 +24,7 @@ namespace Internship_3_OOP
         {
             Name = "";
             PhoneNumber = "";
-            Pref = Preference.normal;
+            Pref = (Preference)1;
         }
 
         public Contact(string _name, string _phoneNumber, Preference _pref)

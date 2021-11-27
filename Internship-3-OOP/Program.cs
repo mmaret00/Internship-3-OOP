@@ -6,18 +6,19 @@ using System.Linq;
 
 namespace Internship_3_OOP
 {
-    public enum PrintChoice
+    enum PrintChoice
     {
-        showCalls,
-        onlyShowContacts,
-        showContactsForOtherMethods
+        ShowCalls,
+        ShowOnlyContacts,
+        ShowContactsForOtherMethods,
+        ShowCallsForOnlyOneContact
     }
 
     class Program
     {
-        public static Random RandomNumberGenerator = new();
-        public static int RandomSeconds => RandomNumberGenerator.Next(5);
-        public static int RandomCallStatus => RandomNumberGenerator.Next(2);
+        static Random RandomNumberGenerator = new();
+        static int RandomSeconds => RandomNumberGenerator.Next(20);
+        static int RandomCallStatus => RandomNumberGenerator.Next(2);
 
         static void Main()
         {
@@ -35,7 +36,7 @@ namespace Internship_3_OOP
                 "1 - Ispis svih kontakata\n" +
                 "2 - Dodavanje novog kontakta u imenik\n" +
                 "3 - Brisanje kontakta iz imenika\n" +
-                "4 - Promjena preference kontakta\n" +
+                "4 - Promjena preferencije kontakta\n" +
                 "5 - Upravljanje kontaktom\n" +
                 "6 - Ispis svih poziva\n" +
                 "0 - Izlaz iz aplikacije");
@@ -46,7 +47,7 @@ namespace Internship_3_OOP
                 {
                     case '1':
                         Console.Clear();
-                        PrintContacts(directory, 0);
+                        Print(directory, 0);
                         break;
                     case '2':
                         Console.Clear();
@@ -54,28 +55,28 @@ namespace Internship_3_OOP
                         break;
                     case '3':
                         Console.Clear();
-                        if (PrintContacts(directory, (PrintChoice)2))
+                        if (Print(directory, (PrintChoice)2))
                         {
                             DeleteContact(directory);
                         }
                         break;
                     case '4':
                         Console.Clear();
-                        if (PrintContacts(directory, (PrintChoice)2))
+                        if (Print(directory, (PrintChoice)2))
                         {
                             EditPreference(directory);
                         }
                         break;
                     case '5':
                         Console.Clear();
-                        if (PrintContacts(directory, (PrintChoice)2))
+                        if (Print(directory, (PrintChoice)2))
                         {
                             ManageContact(directory);
                         }
                         break;
                     case '6':
                         Console.Clear();
-                        PrintContacts(directory, (PrintChoice)1);
+                        Print(directory, (PrintChoice)1);
                         break;
                     case '0':
                         Console.Clear();
@@ -89,7 +90,7 @@ namespace Internship_3_OOP
             }
         }
 
-        static public void Submenu(Dictionary<Contact, Call[]> directory, Contact contact)
+        static void Submenu(Dictionary<Contact, Call[]> directory, Contact contact)
         {
             var exitMenu = false;
             Console.Clear();
@@ -106,7 +107,7 @@ namespace Internship_3_OOP
                 {
                     case '1':
                         Console.Clear();
-                        PrintCallsOfAContact(directory, contact.PhoneNumber);
+                        PrintContacts(directory, (PrintChoice)4, contact.PhoneNumber);
                         break;
                     case '2':
                         Console.Clear();
@@ -124,7 +125,7 @@ namespace Internship_3_OOP
             }
         }
 
-        static public void ReturnToMenu()
+        static void ReturnToMenu()
         {
             Console.WriteLine("\nKliknite bilo koju tipku za povratak na izbornik.");
             Console.ReadKey();
@@ -133,33 +134,32 @@ namespace Internship_3_OOP
 
         static void AddingDefaultContactsAndCalls(Dictionary<Contact, Call[]> directory)
         {
-            var _contact = new Contact("Ante Antimon", "16161361", Preference.normal);
-            var _call = new Call[] { new Call(new DateTime(2018, 11, 1, 23, 0, 1), CallStatus.complete),
-                                      new Call(new DateTime(2019, 11, 1, 11, 11 ,11), CallStatus.missed),
-                                      new Call(new DateTime(2015, 11, 1, 11, 11 ,11), CallStatus.complete)};
+            var _contact = new Contact("Ante Antimon", "0931616136", Preference.Normal);
+            var _call = new Call[] { new Call(new DateTime(2018, 11, 1, 23, 0, 1), CallStatus.Complete),
+                                      new Call(new DateTime(2019, 11, 1, 11, 11 ,11), CallStatus.Missed),
+                                      new Call(new DateTime(2015, 11, 1, 11, 11 ,11), CallStatus.Complete)};
             directory.Add(_contact, _call);
 
-            _contact = new Contact("Ivan Horvat", "25254333", Preference.favorite);
-            _call = new Call[] { new Call(new DateTime(2020, 11, 1, 4, 4, 4), CallStatus.missed),
-                                 new Call(new DateTime(2021, 11, 1, 4, 4, 4), CallStatus.complete)};
+            _contact = new Contact("Ivan Horvat", "0902525433", Preference.Normal);
+            _call = new Call[] { new Call(new DateTime(2020, 11, 1, 4, 4, 4), CallStatus.Missed),
+                                 new Call(new DateTime(2021, 11, 1, 4, 4, 4), CallStatus.Complete)};
             directory.Add(_contact, _call);
 
-            _contact = new Contact("Enver Hoxha", "6535633", Preference.blocked);
-            _call = new Call[] { new Call(new DateTime(2018, 12, 1, 22, 59, 59), CallStatus.missed),
-                                 new Call(new DateTime(2020, 12, 1, 4, 4, 4), CallStatus.complete),
-                                 new Call(new DateTime(2019, 12, 1, 4, 4, 4), CallStatus.complete)};
+            _contact = new Contact("Enver Hoxha", "965357633", Preference.Blocked);
+            _call = new Call[] { new Call(new DateTime(2018, 12, 1, 22, 59, 59), CallStatus.Missed),
+                                 new Call(new DateTime(2020, 12, 1, 4, 4, 4), CallStatus.Complete),
+                                 new Call(new DateTime(2019, 12, 1, 4, 4, 4), CallStatus.Complete)};
             directory.Add(_contact, _call);
 
-            _contact = new Contact("Ivan Horvat", "7777777", Preference.favorite);
-            _call = new Call[] { new Call(new DateTime(2016, 11, 1, 22, 59, 59), CallStatus.in_process) };
+            _contact = new Contact("Ivan Horvat", "977777777", Preference.Favorite);
+            _call = new Call[] { new Call(new DateTime(2016, 11, 1, 22, 59, 59), CallStatus.In_process) };
             directory.Add(_contact, _call);
 
-            _contact = new Contact("test", "1", Preference.favorite);
-            _call = new Call[] { new Call(new DateTime(2017, 11, 1, 22, 59, 59), CallStatus.missed) };
-            directory.Add(_contact, _call);
+            _contact = new Contact("Brat Stipan", "0961234567", Preference.Favorite);
+            directory.Add(_contact, null);
         }
 
-        static public List<(DateTime, CallStatus)> CreateSortedListOfCalls(Call[] call)
+        static List<(DateTime, CallStatus)> CreateSortedListOfCalls(Call[] call)
         {
             var sortedCalls = new List<(DateTime, CallStatus)>();
 
@@ -172,35 +172,54 @@ namespace Internship_3_OOP
             return sortedCalls;
         }
 
-        static public void CallAttempt(Dictionary<Contact, Call[]> directory, Contact contact)
+        static void CallAttempt(Dictionary<Contact, Call[]> directory, Contact contact)
         {
-            if (FindCallInProcess(directory) && CheckIfNumberIsBlocked(contact))
+            if (!FindCallInProcess(directory) || !CheckIfNumberIsBlocked(contact))
             {
-                var status = Program.RandomCallStatus;
-                Call _call = null;
+                return;
+            }
+            
+            var status = Program.RandomCallStatus;
+            Call _call = null;
 
-                Console.Write($"Pozivanje {contact.Name} na broj {contact.PhoneNumber}");
-                WaitTime();
+            Console.Write($"Pozivanje {contact.Name} na broj {contact.PhoneNumber}");
+            WaitTime();
 
-                if ((CallStatus)status == CallStatus.missed)
+            if ((CallStatus)status == (CallStatus)0)
+            {
+                _call = new Call((CallStatus)status);
+                Console.WriteLine($"Kvrapcu, kontakt {contact.Name} se nije javio!");
+                Program.ReturnToMenu();
+            }
+            else if ((CallStatus)status == (CallStatus)1)
+            {
+                _call = new Call((CallStatus)status);
+                CallTime();
+            }
+            AddNewCall(directory, contact, _call);
+        }
+
+        static void AddNewCall(Dictionary<Contact, Call[]> directory, Contact _contact, Call _call)
+        {
+            foreach (var contact in directory)
+            {
+                if (contact.Key == _contact)
                 {
-                    _call = new Call((CallStatus)status);
-                    Console.WriteLine($"Kvrapcu, kontakt {contact.Name} se nije javio!");
-                    Program.ReturnToMenu();
+                    if (null != contact.Value)
+                    {
+                        directory[_contact] = directory[_contact].Concat(new Call[] { _call }).ToArray();
+                    }
+                    else
+                    {
+                        directory[_contact] = new Call[] { _call };
+                    }
                 }
-                else if ((CallStatus)status == CallStatus.complete)
-                {
-                    _call = new Call((CallStatus)status);
-                    CallTime();
-                }
-
-                directory[contact] = directory[contact].Concat(new Call[] { _call }).ToArray();
             }
         }
 
-        static public bool CheckIfNumberIsBlocked(Contact contact)
+        static bool CheckIfNumberIsBlocked(Contact contact)
         {
-            if (contact.Pref == Preference.blocked)
+            if (contact.Pref == Preference.Blocked)
             {
                 Console.WriteLine($"Ne možete nazvati kontakt {contact.Name} (broj: {contact.PhoneNumber}) jer je blokiran.");
                 ReturnToMenu();
@@ -209,20 +228,20 @@ namespace Internship_3_OOP
             else return true;
         }
 
-        static public bool FindCallInProcess(Dictionary<Contact, Call[]> directory)
+        static bool FindCallInProcess(Dictionary<Contact, Call[]> directory)
         {
             foreach (var i in directory)
             {
+                if (null == i.Value) continue;
                 foreach (var j in i.Value)
                 {
-                    if (j._callStatus != CallStatus.in_process) continue;
+                    if (j._callStatus != CallStatus.In_process) continue;
                     
                     Console.WriteLine($"U tijeku je poziv s kontaktom {i.Key.Name} (broj {i.Key.PhoneNumber}), želite li ga prekinuti? Ako želite, upišite 'da':");
-                    var endCallChoice = Console.ReadLine().Trim();
-                    endCallChoice = endCallChoice.ToUpper();
+                    var endCallChoice = Console.ReadLine().Trim().ToUpper();
                     if ("DA" == endCallChoice)
                     {
-                        j._callStatus = CallStatus.complete;
+                        j._callStatus = (CallStatus)1;
                         return true;
                     }
                     else
@@ -235,7 +254,7 @@ namespace Internship_3_OOP
             return true;
         }
 
-        static public void WaitTime()
+        static void WaitTime()
         {
             Thread.Sleep(1000);
             Console.Write(".");
@@ -247,7 +266,7 @@ namespace Internship_3_OOP
             Console.Clear();
         }
 
-        static public void CallTime()
+        static void CallTime()
         {
             int duration = Program.RandomSeconds;
             Console.WriteLine($"Poziv u trajanju od {duration} sek. u tijeku:");
@@ -260,17 +279,26 @@ namespace Internship_3_OOP
             Program.ReturnToMenu();
         }
 
-        static public void AddNewContact(Dictionary<Contact, Call[]> directory)
+        static bool CheckIfNameIsEmpty(string name)
         {
-            Console.WriteLine("Unesi ime novog kontakta:");
-            var name = Console.ReadLine();
             if (0 == name.Length)
             {
                 Console.WriteLine("Nedopušten je unos praznog imena!");
                 ReturnToMenu();
+                return false;
+            }
+            return true;
+        }
+
+        static void AddNewContact(Dictionary<Contact, Call[]> directory)
+        {
+            Console.WriteLine("Unesi ime novog kontakta:");
+            var name = Console.ReadLine();
+            if (!CheckIfNameIsEmpty(name))
+            {
                 return;
             }
-
+            
             Console.WriteLine("Unesi broj:");
             var number = CheckIfNumberIsTaken(directory);
             if(null == number)
@@ -292,7 +320,7 @@ namespace Internship_3_OOP
             ReturnToMenu();
         }
 
-        static public int GetValidPreference()
+        static int GetValidPreference()
         {
             Console.WriteLine("Unesi preferenciju (1 - favorite, 2 - normal, 3 - blocked):");
             var choice = Console.ReadLine().Trim();
@@ -315,7 +343,7 @@ namespace Internship_3_OOP
             }
         }
 
-        static public string CheckIfNumberIsTaken(Dictionary<Contact, Call[]> directory)
+        static string CheckIfNumberIsTaken(Dictionary<Contact, Call[]> directory)
         {
             var number = GetValidPhoneNumber();
             if (null == number)
@@ -331,11 +359,10 @@ namespace Internship_3_OOP
                 ReturnToMenu();
                 return null;
             }
-
             return number;
         }
 
-        static public bool NumberDigitsCheck(string number)
+        static bool NumberDigitsCheck(string number)
         {
             foreach (var digit in number)
             {
@@ -347,7 +374,7 @@ namespace Internship_3_OOP
             return true;
         }
 
-        static public string GetValidPhoneNumber()
+        static string GetValidPhoneNumber()
         {
             string findNumber = (Console.ReadLine().Trim());
 
@@ -358,7 +385,7 @@ namespace Internship_3_OOP
             return null;
         }
 
-        static public bool CheckIfNumberIsNumeric(string number)
+        static bool CheckIfNumberIsNumeric(string number)
         {
             if (!NumberDigitsCheck(number))
             {
@@ -369,7 +396,7 @@ namespace Internship_3_OOP
             return true;
         }
 
-        static public bool CheckIfNumberIsEmpty(string number)
+        static bool CheckIfNumberIsEmpty(string number)
         {
             if (0 == number.Length)
             {
@@ -380,7 +407,7 @@ namespace Internship_3_OOP
             return true;
         }
 
-        static public void DeleteContact(Dictionary<Contact, Call[]> directory)
+        static void DeleteContact(Dictionary<Contact, Call[]> directory)
         {
             Console.WriteLine("Unesi broj kontakta kojeg želiš obrisati: ");
             var deleteNumber = GetValidPhoneNumber();
@@ -390,22 +417,16 @@ namespace Internship_3_OOP
             }
 
             Contact contactToDelete = CheckIfDirectoryContainsNumber(directory, deleteNumber);
-
-            if(null == contactToDelete)
-            {
-                Console.WriteLine("Imenik ne sadrži taj kontakt.");
-            }
-
-            else
+            if(null != contactToDelete)
             {
                 var deleteName = contactToDelete.Name;
                 directory.Remove(contactToDelete);
                 Console.WriteLine($"Kontakt {deleteName} s brojem {deleteNumber} je obrisan.");
+                ReturnToMenu();
             }
-            ReturnToMenu();
         }
 
-        static public Contact CheckIfDirectoryContainsNumber(Dictionary<Contact, Call[]> directory, string number)
+        static Contact CheckIfDirectoryContainsNumber(Dictionary<Contact, Call[]> directory, string number)
         {
             foreach (var contact in directory)
             {
@@ -413,10 +434,13 @@ namespace Internship_3_OOP
 
                 return contact.Key;
             }
+
+            Console.WriteLine("Imenik ne sadrži taj kontakt.");
+            ReturnToMenu();
             return null;
         }
 
-        static public void EditPreference(Dictionary<Contact, Call[]> directory)
+        static void EditPreference(Dictionary<Contact, Call[]> directory)
         {
             Console.WriteLine("Unesi broj kontakta kojem želiš promijeniti preferenciju:");
             string changeNumber = GetValidPhoneNumber();
@@ -426,11 +450,7 @@ namespace Internship_3_OOP
             }
 
             Contact contactToChange = CheckIfDirectoryContainsNumber(directory, changeNumber);
-            if (null == contactToChange)
-            {
-                Console.WriteLine("Imenik ne sadrži taj kontakt.");
-            }
-            else
+            if (null != contactToChange)
             {
                 Console.WriteLine("Unesi novu preferenciju:");
                 var newPref = GetValidPreference();
@@ -439,12 +459,12 @@ namespace Internship_3_OOP
                     return;
                 }
                 contactToChange.Pref = (Preference)newPref;
-                Console.WriteLine($"Preferenca je promijenjena u {(Preference)newPref}.");
+                Console.WriteLine($"Preferencija je promijenjena u {(Preference)newPref}.");
+                ReturnToMenu();
             }
-            ReturnToMenu();
         }
 
-        static public void ManageContact(Dictionary<Contact, Call[]> directory)
+        static void ManageContact(Dictionary<Contact, Call[]> directory)
         {
             Console.WriteLine("Unesite broj kontakta:");
             var number = GetValidPhoneNumber();
@@ -453,32 +473,16 @@ namespace Internship_3_OOP
                 return;
             }
 
-            Contact contactToManage = null;
-            var exists = 0;
-            foreach (var contact in directory)
-            {
-                if (number != contact.Key.PhoneNumber) continue;
-
-                contactToManage = contact.Key;
-                var nameToManage = contact.Key.Name;
-                exists++;
-                break;
-            }
-
-            if (0 == exists)
-            {
-                Console.WriteLine("Broj ne postoji u imeniku.");
-                ReturnToMenu();
-            }
-            else if (1 == exists)
+            Contact contactToManage = CheckIfDirectoryContainsNumber(directory, number);
+            if (null != contactToManage)
             {
                 Submenu(directory, contactToManage);
             }
         }
 
-        static public bool PrintContacts(Dictionary<Contact, Call[]> directory, PrintChoice choice)
+        static bool Print(Dictionary<Contact, Call[]> directory, PrintChoice choice)
         {
-            if (0 == directory.Count())
+            if (0 == directory.Count)
             {
                 Console.WriteLine("Imenik je prazan!");
                 ReturnToMenu();
@@ -488,54 +492,54 @@ namespace Internship_3_OOP
             {
                 Console.WriteLine("Kontakti:");
             }
+            PrintContacts(directory, choice, null);
 
-            foreach (var contact in directory)
-            {
-                Console.WriteLine(contact.Key.Name + "\t broj: " + contact.Key.PhoneNumber + "\t preferenca: " + contact.Key.Pref);
-                if ((PrintChoice)1 == choice && contact.Value != null)
-                {
-                    Console.WriteLine("\nDatum i vrijeme poziva:\t\tStatus:");
-                    for (int i = 0; i < contact.Value.Length; i++)
-                        Console.WriteLine(contact.Value[i].CallSetupTime + "\t\t" + contact.Value[i]._callStatus);
-                    Console.WriteLine("\n===================================\n");
-                }
-                else if ((PrintChoice)1 == choice && contact.Value == null)
-                {
-                    Console.WriteLine("\nNema poziva s kontaktom.");
-                    Console.WriteLine("\n===================================\n");
-                }
-            }
-            if ((PrintChoice)0 == choice || (PrintChoice)1 == choice)
+            if (0 == choice || (PrintChoice)1 == choice)
             {
                 ReturnToMenu();
             }
             return true;
         }
 
-        static public void PrintCallsOfAContact(Dictionary<Contact, Call[]> directory, string number)
+        static void PrintContacts(Dictionary<Contact, Call[]> directory, PrintChoice choice, string number)
         {
             foreach (var contact in directory)
             {
-                if (number != contact.Key.PhoneNumber) continue;
-                //ovdi prominit writeline da lipo pise da je broj i koristit tabove
-                Console.WriteLine(contact.Key.Name + ", " + contact.Key.PhoneNumber + " (" + contact.Key.Pref + ")");
-                if (contact.Value != null)
+                if ((PrintChoice)4 == choice && number != contact.Key.PhoneNumber) continue;
+                
+                Console.WriteLine($"{ contact.Key.Name}\t broj: { contact.Key.PhoneNumber}\t preferencija: { contact.Key.Pref}");
+                
+                if((PrintChoice)4 == choice && null != contact.Value)
                 {
                     var sortedCalls = CreateSortedListOfCalls(contact.Value);
-
-                    Console.WriteLine("\nDatum i vrijeme poziva:\t\tStatus:");
-                    for (int i = 0; i < contact.Value.Length; i++)
-                    {
-                        Console.WriteLine(sortedCalls[i].Item1 + "\t\t" + sortedCalls[i].Item2);
-                    }
+                    PrintCallsFromAList(sortedCalls);
                 }
-                else
+                
+                if ((PrintChoice)1 == choice && null != contact.Value)
+                {
+                    PrintCalls(contact.Value);
+                }
+                else if (((PrintChoice)1 == choice || (PrintChoice)4 == choice) && contact.Value == null)
                 {
                     Console.WriteLine("\nNema poziva s kontaktom.");
+                    if((PrintChoice)1 == choice) Console.WriteLine("\n=================================================\n");
                 }
-                break;
             }
-            ReturnToMenu();
+            if ((PrintChoice)4 == choice) ReturnToMenu();
+        }
+        static void PrintCallsFromAList(List<(DateTime, CallStatus)> list)
+        {
+            Console.WriteLine("\nDatum i vrijeme poziva:\t\tStatus:");
+            for (int i = 0; i < list.Count; i++)
+                Console.WriteLine($"{list[i].Item1}\t\t{list[i].Item2}");
+        }
+
+        static void PrintCalls(Call[] call)
+        {
+            Console.WriteLine("\nDatum i vrijeme poziva:\t\tStatus:");
+            for (int i = 0; i < call.Length; i++)
+                Console.WriteLine($"{call[i].CallSetupTime}\t\t{call[i]._callStatus}");
+            Console.WriteLine("\n=================================================\n");
         }
     }
 }
