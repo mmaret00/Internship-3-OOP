@@ -33,50 +33,50 @@ namespace Internship_3_OOP
                 "6 - Ispis svih poziva\n" +
                 "0 - Izlaz iz aplikacije");
 
-                int.TryParse(Console.ReadLine().Trim(), out int choice);
+                char.TryParse(Console.ReadLine().Trim(), out char choice);
 
                 switch (choice)
                 {
-                    case 1:
+                    case '1':
                         Console.Clear();
                         PrintContacts(directory, 0);
                         break;
-                    case 2:
+                    case '2':
                         Console.Clear();
                         AddNewContact(directory);
                         break;
-                    case 3:
+                    case '3':
                         Console.Clear();
                         if (PrintContacts(directory, 2))
                         {
                             DeleteContact(directory);
                         }
                         break;
-                    case 4:
+                    case '4':
                         Console.Clear();
                         if (PrintContacts(directory, 2))
                         {
                             EditPreference(directory);
                         }
                         break;
-                    case 5:
+                    case '5':
                         Console.Clear();
                         if (PrintContacts(directory, 2))
                         {
                             ManageContact(directory);
                         }
                         break;
-                    case 6:
+                    case '6':
                         Console.Clear();
                         PrintContacts(directory, 1);
                         break;
-                    case 0:
+                    case '0':
                         Console.Clear();
                         exit = 1;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("Molimo unesite jedan od dopuštenih brojeva (0-6)");
+                        Console.WriteLine("Molimo unesite jedan od dopuštenih brojeva (0-6)\n");
                         break;
                 }
             }
@@ -93,25 +93,25 @@ namespace Internship_3_OOP
                 "2 - Kreiranje novog poziva\n" +
                 "0 - Povratak na glavni izbornik");
 
-                int.TryParse(Console.ReadLine().Trim(), out int subchoice);
+                char.TryParse(Console.ReadLine().Trim(), out char subchoice);
 
                 switch (subchoice)
                 {
-                    case 1:
+                    case '1':
                         Console.Clear();
                         PrintCallsOfAContact(directory, contact.PhoneNumber);
                         break;
-                    case 2:
+                    case '2':
                         Console.Clear();
                         CallAttempt(directory, contact);
                         break;
-                    case 0:
+                    case '0':
                         Console.Clear();
                         exit = 1;
                         break;
                     default:
                         Console.Clear();
-                        Console.WriteLine("Molimo unesite jedan od dopuštenih brojeva (0-2)");
+                        Console.WriteLine("Molimo unesite jedan od dopuštenih brojeva (0-2)\n");
                         break;
                 }
             }
@@ -209,7 +209,8 @@ namespace Internship_3_OOP
                     {
                         Console.WriteLine("U tijeku je poziv s kontaktom " + i.Key.Name + " (broj " + i.Key.PhoneNumber + "), želite li ga prekinuti? Ako želite, upišite 'da':");
                         var endCallChoice = Console.ReadLine().Trim();
-                        if ("da" == endCallChoice)
+                        endCallChoice = endCallChoice.ToUpper();
+                        if ("DA" == endCallChoice)
                         {
                             j._callStatus = CallStatus.complete;
                             return true;
@@ -307,35 +308,29 @@ namespace Internship_3_OOP
 
         static public string CheckIfNumberIsTaken(Dictionary<Contact, Call[]> directory)
         {
-            var exit = 0;
             var number = "";
-            while (0 == exit)
+
+            number = GetValidPhoneNumber();
+            if (null == number)
             {
-                number = Console.ReadLine().Trim();
-                if (0 == number.Length)
+                return null;
+            }
+
+            foreach (var item in directory)
+            {
+                if (number == item.Key.PhoneNumber)
                 {
-                    Console.WriteLine("Nedopušten je unos praznog broja!");
+                    Console.WriteLine("Taj broj već postoji u imeniku!:");
                     ReturnToMenu();
                     return null;
                 }
+            }
 
-                var exists = 0;
-                foreach (var item in directory)
-                {
-                    if (number == item.Key.PhoneNumber)
-                    {
-                        exists++;
-                        Console.WriteLine("Taj broj već postoji u imeniku, molimo unesite ga ispočetka:");
-                    }
-                }
-
-                if (!NumberDigitsCheck(number))
-                {
-                    Console.WriteLine("Broj treba sadržavati samo brojeve! Unesite ga opet:");
-                    exists++;
-                }
-
-                if (0 == exists) exit = 1;
+            if (!NumberDigitsCheck(number))
+            {
+                Console.WriteLine("Broj treba sadržavati samo brojeve!");
+                ReturnToMenu();
+                return null;
             }
 
             return number;
@@ -352,21 +347,23 @@ namespace Internship_3_OOP
 
         static public string GetValidPhoneNumber()
         {
-            int repeat;
             string findNumber;
 
-            do
+            findNumber = (Console.ReadLine().Trim());
+
+            if (0 == findNumber.Length)
             {
-                repeat = 0;
-                findNumber = (Console.ReadLine().Trim());
+                Console.WriteLine("Nedopušten je unos praznog broja!");
+                ReturnToMenu();
+                return null;
+            }
 
-                if (!NumberDigitsCheck(findNumber))
-                {
-                    Console.WriteLine("Broj treba sadržavati samo brojeve! Unesite ga opet:");
-                    repeat = 1;
-                }
-
-            } while (0 != repeat);
+            if (!NumberDigitsCheck(findNumber))
+            {
+                Console.WriteLine("Broj treba sadržavati samo brojeve!");
+                ReturnToMenu();
+                return null;
+            }
 
             return findNumber;
         }
@@ -375,6 +372,11 @@ namespace Internship_3_OOP
         {
             Console.WriteLine("Unesi broj kontakta kojeg želiš obrisati: ");
             var deleteNumber = GetValidPhoneNumber();
+            if (null == deleteNumber)
+            {
+                return;
+            }
+
             Contact contactToDelete = null;
 
             var exists = 0;
@@ -408,6 +410,11 @@ namespace Internship_3_OOP
         {
             Console.WriteLine("Unesi broj kontakta kojem želiš promijeniti preferencu:");
             string changeNumber = GetValidPhoneNumber();
+            if (null == changeNumber)
+            {
+                return;
+            }
+
             int correct = 0, exists = 0;
 
             foreach (var item in directory)
@@ -435,6 +442,10 @@ namespace Internship_3_OOP
         {
             Console.WriteLine("Unesite broj kontakta:");
             var number = GetValidPhoneNumber();
+            if(null == number)
+            {
+                return;
+            }
 
             Contact contactToManage = null;
             var exists = 0;
