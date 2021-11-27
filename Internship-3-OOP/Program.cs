@@ -47,18 +47,24 @@ namespace Internship_3_OOP
                         break;
                     case 3:
                         Console.Clear();
-                        PrintContacts(directory, 2);
-                        DeleteContact(directory);
+                        if (PrintContacts(directory, 2))
+                        {
+                            DeleteContact(directory);
+                        }
                         break;
                     case 4:
                         Console.Clear();
-                        PrintContacts(directory, 2);
-                        EditPreference(directory);
+                        if (PrintContacts(directory, 2))
+                        {
+                            EditPreference(directory);
+                        }
                         break;
                     case 5:
                         Console.Clear();
-                        PrintContacts(directory, 2);
-                        ManageContact(directory);
+                        if (PrintContacts(directory, 2))
+                        {
+                            ManageContact(directory);
+                        }
                         break;
                     case 6:
                         Console.Clear();
@@ -161,18 +167,20 @@ namespace Internship_3_OOP
             if (FindCallInProcess(directory) && CheckIfNumberIsBlocked(contact))
             {
                 var status = Program.RandomCallStatus;
-                var _call = new Call((CallStatus)status);
+                Call _call = null;
 
                 Console.Write("Pozivanje " + contact.Name + " na broj " + contact.PhoneNumber);
                 WaitTime();
 
                 if ((CallStatus)status == CallStatus.missed)
                 {
+                    _call = new Call((CallStatus)status);
                     Console.WriteLine("Kvrapcu, kontakt " + contact.Name + " se nije javio!");
                     Program.ReturnToMenu();
                 }
                 else if ((CallStatus)status == CallStatus.complete)
                 {
+                    _call = new Call((CallStatus)status);
                     CallTime();
                 }
 
@@ -200,7 +208,7 @@ namespace Internship_3_OOP
                     if (j._callStatus == CallStatus.in_process)
                     {
                         Console.WriteLine("U tijeku je poziv s kontaktom " + i.Key.Name + " (broj " + i.Key.PhoneNumber + "), želite li ga prekinuti? Ako želite, upišite 'da':");
-                        var endCallChoice = Console.ReadLine();
+                        var endCallChoice = Console.ReadLine().Trim();
                         if ("da" == endCallChoice)
                         {
                             j._callStatus = CallStatus.complete;
@@ -245,7 +253,7 @@ namespace Internship_3_OOP
         static public void AddNewContact(Dictionary<Contact, Call[]> directory)
         {
             Console.WriteLine("Unesi ime novog kontakta:");
-            var name = Console.ReadLine().Trim();
+            var name = Console.ReadLine();
             if (0 == name.Length)
             {
                 Console.WriteLine("Nedopušten je unos praznog imena!");
@@ -275,7 +283,7 @@ namespace Internship_3_OOP
             while (0 == exit)
             {
                 Console.WriteLine("Unesi preferenciju (1 - favorite, 2 - normal, 3 - blocked):");
-                var choice = Console.ReadLine();
+                var choice = Console.ReadLine().Trim();
 
                 switch (choice)
                 {
@@ -449,9 +457,18 @@ namespace Internship_3_OOP
             }
         }
 
-        static public void PrintContacts(Dictionary<Contact, Call[]> directory, int choice)
+        static public bool PrintContacts(Dictionary<Contact, Call[]> directory, int choice)
         {
-            if (1 != choice) Console.WriteLine("Kontakti:");
+            if (0 == directory.Count())
+            {
+                Console.WriteLine("Imenik je prazan!");
+                ReturnToMenu();
+                return false;
+            }
+            if (1 != choice)
+            {
+                Console.WriteLine("Kontakti:");
+            }
 
             foreach (var item in directory)
             {
@@ -473,6 +490,7 @@ namespace Internship_3_OOP
             {
                 ReturnToMenu();
             }
+            return true;
         }
 
         static public void PrintCallsOfAContact(Dictionary<Contact, Call[]> directory, string number)
