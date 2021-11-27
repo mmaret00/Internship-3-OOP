@@ -158,7 +158,7 @@ namespace Internship_3_OOP
 
         static public void CallAttempt(Dictionary<Contact, Call[]> directory, Contact contact)
         {
-            if (FindCallInProcess(directory))
+            if (FindCallInProcess(directory) && CheckIfNumberIsBlocked(contact))
             {
                 var status = Program.RandomCallStatus;
                 var _call = new Call((CallStatus)status);
@@ -178,6 +178,17 @@ namespace Internship_3_OOP
 
                 directory[contact] = directory[contact].Concat(new Call[] { _call }).ToArray();
             }
+        }
+
+        static public bool CheckIfNumberIsBlocked(Contact contact)
+        {
+            if (contact.Pref == Preference.blocked)
+            {
+                Console.WriteLine("Ne možete nazvati kontakt " + contact.Name + " (" + contact.PhoneNumber + ")" + " jer je blokiran.");
+                ReturnToMenu();
+                return false;
+            }
+            else return true;
         }
 
         static public bool FindCallInProcess(Dictionary<Contact, Call[]> directory)
