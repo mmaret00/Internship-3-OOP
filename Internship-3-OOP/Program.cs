@@ -9,7 +9,7 @@ namespace Internship_3_OOP
     class Program
     {
         public static Random RandomNumberGenerator = new();
-        public static int RandomSeconds => RandomNumberGenerator.Next(20);
+        public static int RandomSeconds => RandomNumberGenerator.Next(5);
         public static int RandomCallStatus => RandomNumberGenerator.Next(2);
 
         static void Main()
@@ -158,7 +158,7 @@ namespace Internship_3_OOP
 
         static public void CallAttempt(Dictionary<Contact, Call[]> directory, Contact contact)
         {
-            if (FindCallInProcess(directory, contact))
+            if (FindCallInProcess(directory))
             {
                 var status = Program.RandomCallStatus;
                 var _call = new Call((CallStatus)status);
@@ -180,7 +180,7 @@ namespace Internship_3_OOP
             }
         }
 
-        static public bool FindCallInProcess(Dictionary<Contact, Call[]> directory, Contact contact)
+        static public bool FindCallInProcess(Dictionary<Contact, Call[]> directory)
         {
             foreach (var i in directory)
             {
@@ -234,10 +234,20 @@ namespace Internship_3_OOP
         static public void AddNewContact(Dictionary<Contact, Call[]> directory)
         {
             Console.WriteLine("Unesi ime novog kontakta:");
-            var name = Console.ReadLine();
+            var name = Console.ReadLine().Trim();
+            if (0 == name.Length)
+            {
+                Console.WriteLine("Nedopušten je unos praznog imena!");
+                ReturnToMenu();
+                return;
+            }
 
             Console.WriteLine("Unesi broj:");
             var number = CheckIfNumberIsTaken(directory);
+            if(null == number)
+            {
+                return;
+            }
 
             Preference prefer = GetValidPreference();
 
@@ -278,13 +288,19 @@ namespace Internship_3_OOP
 
         static public string CheckIfNumberIsTaken(Dictionary<Contact, Call[]> directory)
         {
-            var number = "";
             var exit = 0;
+            var number = "";
             while (0 == exit)
             {
-                var exists = 0;
-                number = Console.ReadLine();
+                number = Console.ReadLine().Trim();
+                if (0 == number.Length)
+                {
+                    Console.WriteLine("Nedopušten je unos praznog broja!");
+                    ReturnToMenu();
+                    return null;
+                }
 
+                var exists = 0;
                 foreach (var item in directory)
                 {
                     if (number == item.Key.PhoneNumber)
